@@ -92,8 +92,8 @@ echo -e "  [7] Script info"
 echo -e ""
 echo -e "  [8] Exit"
 echo -e ""
-until [[ ${option} =~ ^[1-9]$ ]]; do
-	read -rp "Select an option [1-9]: " option
+until [[ ${option} =~ ^[1-8]$ ]]; do
+	read -rp "Select an option [1-8]: " option
 done
 
 case "${option}" in
