@@ -325,12 +325,12 @@ echo "55 23 * * * root script-2" >> /etc/crontab
 echo off >> /iriszz/block-status
 
 # Cleanup and reboot
+rm -f /root/install.sh
+cp /dev/null /root/.bash_history
 clear
 echo -e ""
 echo -e "Script executed succesfully."
 echo -e ""
 read -n 1 -r -s -p $"Press enter to reboot..."
 echo -e ""
-rm -f /root/install.sh
-cp /dev/null /root/.bash_history
 reboot
