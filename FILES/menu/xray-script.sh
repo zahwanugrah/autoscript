@@ -14,7 +14,7 @@ function add-user() {
 	read -p "Duration (day) : " duration
 
 	uuid=$(uuidgen)
-	while grep -qw "$uuid" /root/xray-clients.txt; do
+	while grep -qw "$uuid" /iriszz/xray/xray-clients.txt; do
 		uuid=$(uuidgen)
 	done
 	exp=$(date -d +${duration}days +%Y-%m-%d)
