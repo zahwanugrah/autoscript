@@ -14,6 +14,9 @@ function add-user() {
 	read -p "Duration (day) : " duration
 
 	uuid=$(uuidgen)
+	while grep -qw "$uuid" /iriszz/v2ray/v2ray-clients.txt; do
+		uuid=$(uuidgen)
+	done
 	exp=$(date -d +${duration}days +%Y-%m-%d)
 	expired=$(date -d "${exp}" +"%d %b %Y")
 	domain=$(cat /usr/local/etc/v2ray/domain)
