@@ -16,9 +16,9 @@ do
 		mv -f /usr/local/etc/v2ray/ws-tls_tmp.json /usr/local/etc/v2ray/ws-tls.json
 		cat /usr/local/etc/v2ray/ws.json | jq 'del(.inbounds[0].settings.clients[] | select(.id == "'${uuid}'"))' > /usr/local/etc/v2ray/ws_tmp.json
 		mv -f /usr/local/etc/v2ray/ws_tmp.json /usr/local/etc/v2ray/ws.json
-		sed -i "/\b$user\b/d" /iriszz/v2ray/v2ray-clients.txt
+		sed -i "/\b$user\b/d" /data/v2ray/v2ray-clients.txt
 	fi
-done < /iriszz/v2ray/v2ray-clients.txt
+done < /data/v2ray/v2ray-clients.txt
 
 unset expired
 while read expired
@@ -36,7 +36,7 @@ do
 			head -7 /etc/wireguard/wg0.conf > /tmp/wg0.conf
 			mv /tmp/wg0.conf /etc/wireguard/wg0.conf
 		fi
-		rm -f /iriszz/wireguard/${user}.conf
-		sed -i "/\b$user\b/d" /iriszz/wireguard/wireguard-clients.txt
+		rm -f /data/wireguard/${user}.conf
+		sed -i "/\b$user\b/d" /data/wireguard/wireguard-clients.txt
 	fi
-done < /iriszz/wireguard/wireguard-clients.txt
+done < /data/wireguard/wireguard-clients.txt
