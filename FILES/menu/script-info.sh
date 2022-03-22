@@ -33,7 +33,7 @@ How to change:
 4) Auto-reboot - \"0 0 * * * root reboot\" at /etc/crontab
 
 ==============================================
-Script written by Iriszz.
-Report bugs: https://t.me/iriszz
+Script written by kontol
+Report bugs: https://t.me/lancauman
 
 Thank you for using my script :)\n"
