@@ -5,7 +5,7 @@ function add-user() {
 	echo -e "Add V2Ray User"
 	echo -e "--------------"
 	read -p "Username : " user
-	if grep -qw "$user" /iriszz/v2ray/v2ray-clients.txt; then
+	if grep -qw "$user" /data/v2ray/v2ray-clients.txt; then
 		echo -e ""
 		echo -e "User '$user' already exist."
 		echo -e ""
@@ -14,14 +14,14 @@ function add-user() {
 	read -p "Duration (day) : " duration
 
 	uuid=$(uuidgen)
-	while grep -qw "$uuid" /iriszz/v2ray/v2ray-clients.txt; do
+	while grep -qw "$uuid" /data/v2ray/v2ray-clients.txt; do
 		uuid=$(uuidgen)
 	done
 	exp=$(date -d +${duration}days +%Y-%m-%d)
 	expired=$(date -d "${exp}" +"%d %b %Y")
 	domain=$(cat /usr/local/etc/v2ray/domain)
 	email=${user}@${domain}
-	echo -e "${user}\t${uuid}\t${exp}" >> /iriszz/v2ray/v2ray-clients.txt
+	echo -e "${user}\t${uuid}\t${exp}" >> /data/v2ray/v2ray-clients.txt
 
 	cat /usr/local/etc/v2ray/ws-tls.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 2,"email": "'${email}'"}]' > /usr/local/etc/v2ray/ws-tls_tmp.json
 	mv -f /usr/local/etc/v2ray/ws-tls_tmp.json /usr/local/etc/v2ray/ws-tls.json
@@ -44,13 +44,13 @@ function delete-user() {
 	echo -e "-----------------"
 	read -p "Username : " user
 	echo -e ""
-	if ! grep -qw "$user" /iriszz/v2ray/v2ray-clients.txt; then
+	if ! grep -qw "$user" /data/v2ray/v2ray-clients.txt; then
 		echo -e ""
 		echo -e "User '$user' does not exist."
 		echo -e ""
 		exit 0
 	fi
-	uuid="$(cat /iriszz/v2ray/v2ray-clients.txt | grep -w "$user" | awk '{print $2}')"
+	uuid="$(cat /data/v2ray/v2ray-clients.txt | grep -w "$user" | awk '{print $2}')"
 
 	cat /usr/local/etc/v2ray/ws-tls.json | jq 'del(.inbounds[0].settings.clients[] | select(.id == "'${uuid}'"))' > /usr/local/etc/v2ray/ws-tls_tmp.json
 	mv -f /usr/local/etc/v2ray/ws-tls_tmp.json /usr/local/etc/v2ray/ws-tls.json
@@ -69,7 +69,7 @@ function extend-user() {
 	echo -e "Extend V2Ray User"
 	echo -e "-----------------"
 	read -p "Username : " user
-	if ! grep -qw "$user" /iriszz/v2ray/v2ray-clients.txt; then
+	if ! grep -qw "$user" /data/v2ray/v2ray-clients.txt; then
 		echo -e ""
 		echo -e "User '$user' does not exist."
 		echo -e ""
@@ -77,15 +77,15 @@ function extend-user() {
 	fi
 	read -p "Duration (day) : " extend
 
-	uuid=$(cat /iriszz/v2ray/v2ray-clients.txt | grep -w $user | awk '{print $2}')
-	exp_old=$(cat /iriszz/v2ray/v2ray-clients.txt | grep -w $user | awk '{print $3}')
+	uuid=$(cat /data/v2ray/v2ray-clients.txt | grep -w $user | awk '{print $2}')
+	exp_old=$(cat /data/v2ray/v2ray-clients.txt | grep -w $user | awk '{print $3}')
 	diff=$((($(date -d "${exp_old}" +%s)-$(date +%s))/(86400)))
 	duration=$(expr $diff + $extend + 1)
 	exp_new=$(date -d +${duration}days +%Y-%m-%d)
 	exp=$(date -d "${exp_new}" +"%d %b %Y")
 
-	sed -i "/\b$user\b/d" /iriszz/v2ray/v2ray-clients.txt
-	echo -e "$user\t$uuid\t$exp_new" >> /iriszz/v2ray/v2ray-clients.txt
+	sed -i "/\b$user\b/d" /data/v2ray/v2ray-clients.txt
+	echo -e "$user\t$uuid\t$exp_new" >> /data/v2ray/v2ray-clients.txt
 
 	clear
 	echo -e "V2Ray User Information"
@@ -107,8 +107,8 @@ function user-list() {
 		exp=$(echo $expired | awk '{print $3}')
 		exp_date=$(date -d"${exp}" "+%d %b %Y")
 		printf "%-17s %2s\n" "$user" "$exp_date"
-	done < /iriszz/v2ray/v2ray-clients.txt
-	total=$(wc -l /iriszz/v2ray/v2ray-clients.txt | awk '{print $1}')
+	done < /data/v2ray/v2ray-clients.txt
+	total=$(wc -l /data/v2ray/v2ray-clients.txt | awk '{print $1}')
 	echo -e "-------------------------------"
 	echo -e "Total accounts: $total"
 	echo -e "==============================="
@@ -116,7 +116,7 @@ function user-list() {
 }
 
 function user-monitor() {
-	data=($(cat /iriszz/v2ray/v2ray-clients.txt | awk '{print $1}'))
+	data=($(cat /data/v2ray/v2ray-clients.txt | awk '{print $1}'))
 	data2=($(netstat -anp | grep ESTABLISHED | grep tcp6 | grep v2ray | grep -w '80\|443' | awk '{print $5}' | cut -d: -f1 | sort | uniq))
 	domain=$(cat /usr/local/etc/v2ray/domain)
 	clear
@@ -150,15 +150,15 @@ function show-config() {
 	echo -e "V2Ray Config"
 	echo -e "------------"
 	read -p "User : " user
-	if ! grep -qw "$user" /iriszz/v2ray/v2ray-clients.txt; then
+	if ! grep -qw "$user" /data/v2ray/v2ray-clients.txt; then
 		echo -e ""
 		echo -e "User '$user' does not exist."
 		echo -e ""
 		exit 0
 	fi
-	uuid=$(cat /iriszz/v2ray/v2ray-clients.txt | grep -w "$user" | awk '{print $2}')
+	uuid=$(cat /dara/v2ray/v2ray-clients.txt | grep -w "$user" | awk '{print $2}')
 	domain=$(cat /usr/local/etc/v2ray/domain)
-	exp=$(cat /iriszz/v2ray/v2ray-clients.txt | grep -w "$user" | awk '{print $3}')
+	exp=$(cat /data/v2ray/v2ray-clients.txt | grep -w "$user" | awk '{print $3}')
 	exp_date=$(date -d"${exp}" "+%d %b %Y")
 
 	cat> /tmp/v2ray_ws_tls_client.json << END
@@ -168,7 +168,7 @@ function show-config() {
   "add": "${domain}",
   "port": "443",
   "id": "${uuid}",
-  "aid": "2",
+  "aid": "0",
   "host": "${domain}",
   "path": "/v2ray",
   "net": "ws",
@@ -184,7 +184,7 @@ END
   "add": "${domain}",
   "port": "80",
   "id": "${uuid}",
-  "aid": "2",
+  "aid": "0",
   "host": "${domain}",
   "path": "/v2ray",
   "net": "ws",
@@ -203,7 +203,7 @@ END
 	echo -e "Address : ${domain}"
 	echo -e "Port : 443"
 	echo -e "ID : ${uuid}"
-	echo -e "alterID : 2"
+	echo -e "alterID : 0"
 	echo -e "Security : auto"
 	echo -e "Network : ws"
 	echo -e "Path : /v2ray"
@@ -218,7 +218,7 @@ END
 	echo -e "Address : ${domain}"
 	echo -e "Port : 80"
 	echo -e "ID : ${uuid}"
-	echo -e "alterID : 2"
+	echo -e "alterID : 0"
 	echo -e "Security : auto"
 	echo -e "Network : ws"
 	echo -e "Path : /v2ray"
