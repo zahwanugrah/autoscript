@@ -2,7 +2,7 @@
 
 function block-conn() {
 	clear
-	status=$(cat /iriszz/block-status)
+	status=$(cat /data/block-status)
 	if [ "$status" == on ]; then
 		echo -e "Do you want to allow all connections?"
 		echo -e "  [1] Yes"
@@ -22,7 +22,7 @@ function block-conn() {
 			ufw allow 7300 > /dev/null 2>&1
 			ufw allow 8000 > /dev/null 2>&1
 			ufw allow 3128 > /dev/null 2>&1
-			echo off > /iriszz/block-status
+			echo off > /data/block-status
 		elif [ $option -eq 2 ]; then
 			clear
 			echo -e "Operation cancelled."
