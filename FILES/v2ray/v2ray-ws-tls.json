@@ -17,8 +17,8 @@
         "tlsSettings": {
           "certificates": [
             {
-              "certificateFile": "/iriszz/v2ray/v2ray.crt",
-              "keyFile": "/iriszz/v2ray/v2ray.key"
+              "certificateFile": "/data/v2ray/v2ray.crt",
+              "keyFile": "/data/v2ray/v2ray.key"
             }
           ]
         },
