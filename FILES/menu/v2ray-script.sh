@@ -23,9 +23,9 @@ function add-user() {
 	email=${user}@${domain}
 	echo -e "${user}\t${uuid}\t${exp}" >> /data/v2ray/v2ray-clients.txt
 
-	cat /usr/local/etc/v2ray/ws-tls.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 2,"email": "'${email}'"}]' > /usr/local/etc/v2ray/ws-tls_tmp.json
+	cat /usr/local/etc/v2ray/ws-tls.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"email": "'${email}'"}]' > /usr/local/etc/v2ray/ws-tls_tmp.json
 	mv -f /usr/local/etc/v2ray/ws-tls_tmp.json /usr/local/etc/v2ray/ws-tls.json
-	cat /usr/local/etc/v2ray/ws.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 2,"email": "'${email}'"}]' > /usr/local/etc/v2ray/ws_tmp.json
+	cat /usr/local/etc/v2ray/ws.json | jq '.inbounds[0].settings.clients += [{"id": "'${uuid}'","alterId": 0,"email": "'${email}'"}]' > /usr/local/etc/v2ray/ws_tmp.json
 	mv -f /usr/local/etc/v2ray/ws_tmp.json /usr/local/etc/v2ray/ws.json
 	service v2ray@ws-tls restart
 	service v2ray@ws restart
@@ -56,7 +56,7 @@ function delete-user() {
 	mv -f /usr/local/etc/v2ray/ws-tls_tmp.json /usr/local/etc/v2ray/ws-tls.json
 	cat /usr/local/etc/v2ray/ws.json | jq 'del(.inbounds[0].settings.clients[] | select(.id == "'${uuid}'"))' > /usr/local/etc/v2ray/ws_tmp.json
 	mv -f /usr/local/etc/v2ray/ws_tmp.json /usr/local/etc/v2ray/ws.json
-	sed -i "/\b$user\b/d" /iriszz/v2ray/v2ray-clients.txt
+	sed -i "/\b$user\b/d" /data/v2ray/v2ray-clients.txt
 	service v2ray@ws-tls restart
 	service v2ray@ws restart
 
